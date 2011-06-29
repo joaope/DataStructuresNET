@@ -12,9 +12,17 @@
 namespace DataStructuresNET.Arrays
 {
     /// <summary>
-    /// Queue interface.
+    /// Queues interface.
     /// </summary>
-    /// <typeparam name="T">The type of elements </typeparam>
+    /// <typeparam name="T">The type of elements hold by the <see cref="IQueueable{T}"/>.</typeparam>
+    /// <author>João Correia</author>
+    /// <owner>João Correia</owner>
+    /// <history>
+    /// __________________________________________________________________________
+    /// History :
+    /// 20110628 jcorreia [+] Initial version
+    /// __________________________________________________________________________
+    /// </history>
     public interface IQueueable<T>
     {
         /// <summary>

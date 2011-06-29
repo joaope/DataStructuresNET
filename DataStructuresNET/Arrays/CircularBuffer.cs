@@ -17,15 +17,15 @@ using System.Threading;
 namespace DataStructuresNET.Arrays
 {
     /// <summary>
+    /// Circular Buffer (Queue) implementation.
     /// </summary>
-    /// <remarks>
-    /// </remarks>
+    /// <typeparam name="T">The type of elements hold by the <see cref="CircularBuffer{T}"/>.</typeparam>
     /// <author>João Correia</author>
     /// <owner>João Correia</owner>
     /// <history>
     /// __________________________________________________________________________
     /// History :
-    /// 20110101 jcorreia [+] Initial version
+    /// 20110628 jcorreia [+] Initial version
     /// __________________________________________________________________________
     /// </history>
     public class CircularBuffer<T>
@@ -42,9 +42,15 @@ namespace DataStructuresNET.Arrays
         private int fCapacity;
 
         /// <summary>
-        /// 
+        /// Gets and sets the buffer capacity.
         /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <remarks>
+        /// To increase buffer size the reallocation of that same buffer is needed which can cost time and
+        /// memory overhead in case of very large buffers.
+        /// </remarks>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// If the new specified capacity is lower than the current number of elements hold by the buffer.
+        /// </exception>
         public int Capacity
         {
             get
@@ -82,35 +88,35 @@ namespace DataStructuresNET.Arrays
         }
 
         /// <summary>
-        /// 
+        /// Gets and sets the value indicating if the queue allows the overlap of elements when the buffer is full.
         /// </summary>
         public bool AllowOverwrite { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets the number of elements contained in the <see cref="CircularBuffer{T}"/>. 
         /// </summary>
         public int Count { get; private set; }
 
         /// <summary>
-        /// 
+        /// Gets the circular buffer head.
         /// </summary>
         public int Head { get; private set; }
 
         /// <summary>
-        /// 
+        /// Gets the circular buffer tail.
         /// </summary>
         public int Tail { get; private set; }
 
         /// <summary>
-        /// 
+        /// Gets and sets circular buffer data (internal property).
         /// </summary>
-        private T[] Buffer { get; set; }
+        internal T[] Buffer { get; set; }
 
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="CircularBuffer{T}"/> class.
         /// </summary>
-        /// <param name="capacity"></param>
-        /// <param name="allowOverwrite"></param>
+        /// <param name="capacity">The initial buffer's capacity.</param>
+        /// <param name="allowOverwrite">Indicates if elements overwrite is allowed.</param>
         public CircularBuffer(int capacity = 255, bool allowOverwrite = true)
         {
             Capacity = capacity;
