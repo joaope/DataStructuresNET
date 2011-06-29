@@ -29,7 +29,7 @@ namespace DataStructuresNET.Arrays
     /// __________________________________________________________________________
     /// </history>
     public class CircularBuffer<T>
-        : IEnumerable, IEnumerable<T>, ICollection
+        : IEnumerable, IEnumerable<T>, ICollection, IQueueable<T>
     {
         /// <summary>
         /// Field for <see cref="ICollection.SyncRoot"/> property.
@@ -121,9 +121,9 @@ namespace DataStructuresNET.Arrays
         }
 
         /// <summary>
-        /// 
+        /// Adds an object to the end of the <see cref="CircularBuffer{T}"/>. 
         /// </summary>
-        /// <param name="item"></param>
+        /// <param name="item">Item to add to the queue.</param>
         public void Enqueue(T item)
         {
             lock (((ICollection)this).SyncRoot)
@@ -151,12 +151,23 @@ namespace DataStructuresNET.Arrays
         }
 
         /// <summary>
-        /// 
+        /// Adds a range of items to the <see cref="CircularBuffer{T}"/>.
         /// </summary>
-        /// <param name="collection"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        /// <exception cref="ArgumentException"></exception>
+        /// <param name="collection">Array of items to add to thequeue.</param>
+        /// <param name="startIndex"><paramref name="colletion"/>'s starting element index.</param>
+        /// <param name="count">Number of items to enqueue starting on <paramref name="startIndex"/></param>
+        /// <exception cref="ArgumentNullException"><paramref name="collection"/> is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// If <paramref name="collection"/> is lower than 0 (zero-based index)
+        /// 
+        /// -OR-
+        /// 
+        /// If <paramref name="collection"/> is higher than the actual <see cref="CircularBuffer{T}"/> length.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Number of elements to add, starting from <paramref name="startIndex"/>, exceeds 
+        /// the <see cref="CircularBuffer{T}"/>'s actual length.
+        /// </exception>
         public void EnqueueRange(T[] source, int startIndex, int count)
         {
             lock (((ICollection)this).SyncRoot)
@@ -191,10 +202,12 @@ namespace DataStructuresNET.Arrays
         }
 
         /// <summary>
-        /// 
+        /// Determines whether an element is in the <see cref="CircularBuffer{T}"/>.
         /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
+        /// <param name="item">
+        /// The object to locate in the <see cref="CircularBuffer{T}"/>.
+        /// The value can be <b>null</b> for reference types.</param>
+        /// <returns><b>true</b> if item is found in the <see cref="CircularBuffer{T}"/>; otherwise, <b>false</b>.</returns>
         public bool Contains(T item)
         {
             lock (((ICollection)this).SyncRoot)
@@ -224,10 +237,10 @@ namespace DataStructuresNET.Arrays
         }
 
         /// <summary>
-        /// 
+        /// Removes and returns the object at the beginning of the <see cref="CircularBuffer{T}"/>. 
         /// </summary>
-        /// <returns></returns>
-        /// <exception cref="invalidOperationException"></exception>
+        /// <returns>The object that is removed from the beginning of the <see cref="CircularBuffer{T}"/>.</returns>
+        /// <exception cref="InvalidOperationException">The <see cref="CircularBuffer{T}"/> is empty.</exception>
         public T Dequeue()
         {
             lock (((ICollection)this).SyncRoot)
@@ -250,10 +263,10 @@ namespace DataStructuresNET.Arrays
         }
 
         /// <summary>
-        /// 
+        /// Returns the object at the beginning of the <see cref="CircularBuffer{T}"/> without removing it. 
         /// </summary>
-        /// <returns></returns>
-        /// <exception cref="invalidOperationException"></exception>
+        /// <returns>The object at the beginning of the <see cref="CircularBuffer{T}"/>.</returns>
+        /// <exception cref="InvalidOperationException">The <see cref="CircularBuffer{T}"/> is empty.</exception>
         public T Peek()
         {
             lock (((ICollection)this).SyncRoot)
@@ -361,7 +374,7 @@ namespace DataStructuresNET.Arrays
         }
 
         /// <summary>
-        /// 
+        /// Removes all objects from the <see cref="CircularBuffer{T}"/>.
         /// </summary>
         public void Clear()
         {
