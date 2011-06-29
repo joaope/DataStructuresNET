@@ -1,7 +1,7 @@
 *.suo
-*.pdb
 Local.testsettings
 
+bin
 obj
 TestResults
 DataStructuresNET.Tests/bin/*
