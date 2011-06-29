@@ -29,7 +29,7 @@ namespace DataStructuresNET.Arrays
     /// __________________________________________________________________________
     /// </history>
     public class CircularBuffer<T>
-        : IEnumerable, IEnumerable<T>, ICollection, IQueueable<T>
+        : IEnumerable, IEnumerable<T>, ICollection, IQueue<T>
     {
         /// <summary>
         /// Field for <see cref="ICollection.SyncRoot"/> property.
