@@ -71,23 +71,5 @@ namespace DataStructuresNET.Arrays
         /// Removes all objects from the <see cref="IArray{T}"/>.
         /// </summary>
         void Clear();
-
-        /// <summary>
-        /// Sets the capacity to the actual number of elements in the <see cref="IArray{T}"/>, if that
-        /// number is less than 90 percent of current capacity. 
-        /// </summary>
-        /// <remarks>
-        /// This method can be used to minimize a collection's memory overhead if no new elements will be 
-        /// added to the array. The cost of reallocating and copying a large <see cref="IArray{T}"/> can be considerable, 
-        /// however, the <b>TrimExcess</b> method does nothing if the list is at more than 90 percent of capacity.
-        /// This avoids incurring a large reallocation cost for a relatively small gain.
-        /// 
-        /// This method is an O(n) operation, where n is <see cref="Count"/>.
-        /// 
-        /// To reset a <see cref="IArray{T}"/> to its initial state, call the Clear method before 
-        /// calling <b>TrimExcess</b> method. Trimming an empty <see cref="IArray{T}"/> sets the capacity of 
-        /// the <see cref="IArray{T}"/> to the default capacity. 
-        /// </remarks>
-        void TrimExcess();
     }
 }
