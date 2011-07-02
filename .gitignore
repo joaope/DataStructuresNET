@@ -1,4 +1,5 @@
 *.suo
+*.sdf
 Local.testsettings
 
 bin
