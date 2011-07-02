@@ -1,6 +1,9 @@
 *.suo
 *.sdf
-Local.testsettings
+*.vsmdi
+*.csproj
+*.sln
+*.testsettings
 
 bin
 obj
