@@ -29,7 +29,7 @@ namespace DataStructuresNET.Arrays
     /// __________________________________________________________________________
     /// </history>
     public class CircularBuffer<T>
-        : IEnumerable, IEnumerable<T>, ICollection, IQueue<T>
+        : IQueue<T>, IArray<T>
     {
         /// <summary>
         /// Field for <see cref="ICollection.SyncRoot"/> property.
@@ -88,6 +88,80 @@ namespace DataStructuresNET.Arrays
         }
 
         /// <summary>
+        /// Get or set the element at the specified index. 
+        /// 
+        /// Although the index is zero-based take into account that the count starts from 
+        /// the <see cref="Head"/> value, ie. if you specify 0 as index the returned value will be
+        /// the element at the head of the buffer.
+        /// </summary>
+        /// <remarks>It accepts <b>null</b> as a valid value and allows duplicate elements.</remarks>
+        /// <param name="index">The zero-based index of the element to get or set.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// index is less than 0. 
+        /// 
+        /// -or-
+        ///
+        /// index is equal to or greater than Count.
+        /// </exception>
+        public T this[int index]
+        {
+            get 
+            {
+                if (index < 0 || index >= Count)
+                {
+                    throw new ArgumentOutOfRangeException(
+                        "indexer",
+                        index,
+                        string.Format(
+                            "Indexer property index out of range. Shouldn't be less than 0 and equal or greater than Count ({0})", 
+                            Count));
+                }
+
+                int trueIndex = Head + index;
+                return Buffer[trueIndex >= Capacity ? trueIndex - Capacity : trueIndex];
+            }
+            set
+            {
+                if (index < 0 || index >= Count)
+                {
+                    throw new ArgumentOutOfRangeException(
+                        "indexer",
+                        index,
+                        string.Format(
+                            "Indexer property index out of range. Shouldn't be less than 0 and equal or greater than Count ({0})",
+                            Count));
+                }
+
+                int trueIndex = Head + index;
+                Buffer[trueIndex >= Capacity ? trueIndex - Capacity : trueIndex] = value;
+            }
+        }
+
+        /// <summary>
+        /// Determines if <see cref="CircularBuffer{T}"/> if full.
+        /// </summary>
+        /// <returns><b>true</b> if buffer is full; otherwise false.</returns>
+        public bool IsFull
+        {
+            get 
+            { 
+                return (Capacity == Count);
+            }
+        }
+
+        /// <summary>
+        /// Determines if <see cref="CircularBuffer{T}"/> is empty.
+        /// </summary>
+        /// <returns><b>true</b> if buffer is empty; otherwise false.</returns>
+        public bool IsEmpty
+        {
+            get
+            {
+                return (Count == 0);
+            }
+        }
+
+        /// <summary>
         /// Gets and sets the value indicating if the queue allows the overlap of elements when the buffer is full.
         /// </summary>
         public bool AllowOverwrite { get; set; }
@@ -134,7 +208,7 @@ namespace DataStructuresNET.Arrays
         {
             lock (((ICollection)this).SyncRoot)
             {
-                if (!AllowOverwrite && IsFull())
+                if (!AllowOverwrite && IsFull)
                 {
                     throw new InvalidOperationException(
                         string.Format(
@@ -142,7 +216,7 @@ namespace DataStructuresNET.Arrays
                             Count));
                 }
 
-                if (!IsFull())
+                if (!IsFull)
                 {
                     Count++;
                 }
@@ -251,7 +325,7 @@ namespace DataStructuresNET.Arrays
         {
             lock (((ICollection)this).SyncRoot)
             {
-                if (IsEmpty())
+                if (IsEmpty)
                 {
                     throw new InvalidOperationException("CircularBuffer is empty");
                 }
@@ -277,7 +351,7 @@ namespace DataStructuresNET.Arrays
         {
             lock (((ICollection)this).SyncRoot)
             {
-                if (IsEmpty())
+                if (IsEmpty)
                 {
                     throw new InvalidOperationException("CircularBuffer is empty");
                 }
@@ -348,9 +422,9 @@ namespace DataStructuresNET.Arrays
         }
 
         /// <summary>
-        /// 
+        /// Copies the elements of the <see cref="CircularBuffer{T}"/> to a new array. 
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Array containing copies of the elements of the <see cref="CircularBuffer{T}"/>.</returns>
         public T[] ToArray()
         {
             lock (((ICollection)this).SyncRoot)
@@ -359,24 +433,6 @@ namespace DataStructuresNET.Arrays
                 CopyTo(array);
                 return array;
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public bool IsFull()
-        {
-            return (Capacity == Count);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public bool IsEmpty()
-        {
-            return (Count == 0);
         }
 
         /// <summary>
@@ -398,7 +454,7 @@ namespace DataStructuresNET.Arrays
         /// <remarks>
         /// This method can be used to minimize a collection's memory overhead if no new elements will be 
         /// added to the collection. The cost of reallocating and copying a large Queue<T>can be considerable, 
-        /// however, so the <b>TrimExcess</b> method does nothing if the list is at more than 90 percent of capacity.
+        /// however, the <b>TrimExcess</b> method does nothing if the list is at more than 90 percent of capacity.
         /// This avoids incurring a large reallocation cost for a relatively small gain.
         /// 
         /// The <see cref="Tail"/>, which was pointing to the next empty space, is now 0, which corresponds to
@@ -414,7 +470,12 @@ namespace DataStructuresNET.Arrays
         {
             lock (((ICollection)this).SyncRoot)
             {
-                if (Count > 0 && (Count * 100 / Capacity) <= 90)
+                if (IsEmpty)
+                {
+                    Buffer = new T[Capacity];
+                    Tail = 0;
+                }
+                else if (Count > 0 && (Count * 100 / Capacity) <= 90)
                 {
                     int newCapacity = Count;
 

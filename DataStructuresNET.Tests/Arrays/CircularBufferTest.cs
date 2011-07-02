@@ -30,6 +30,24 @@ namespace DataStructuresNET.Tests.Arrays
     public class CircularBufferTests
     {
         [TestMethod]
+        public void CircularBuffer_IndexerGet()
+        {
+            var buffer = new CircularBuffer<int>(10);
+            buffer.EnqueueRange(
+                new int[5] { 12, 4, 9, 43, 0 }, 
+                0, 5);
+
+            Assert.AreEqual<int>(12, buffer[0]);
+            Assert.AreEqual<int>(0, buffer[4]);
+
+            buffer.TrimExcess();
+            buffer.EnqueueRange(new int[] { 99, 100 }, 0, 2);
+
+            Assert.AreEqual<int>(99, buffer[0]);
+            Assert.AreEqual<int>(9, buffer[2]);
+        }
+
+        [TestMethod]
         public void CircularBuffer_CopyTo()
         {
             var data = new int[5] { 12, 4, 9, 43, 0 };
