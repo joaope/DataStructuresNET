@@ -86,6 +86,6 @@ namespace DataStructuresNET.Arrays
         /// calling <b>TrimExcess</b> method. Trimming an empty <see cref="IArray{T}"/> sets the capacity of 
         /// the <see cref="IArray{T}"/> to the default capacity. 
         /// </remarks>
-        public void TrimExcess();
+        void TrimExcess();
     }
 }
