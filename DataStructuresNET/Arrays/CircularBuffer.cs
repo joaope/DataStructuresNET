@@ -113,7 +113,7 @@ namespace DataStructuresNET.Arrays
                         "indexer",
                         index,
                         string.Format(
-                            "Indexer property index out of range. Shouldn't be less than 0 and equal or greater than Count ({0})", 
+                            "Index must be non-negative and less than the array count ({0})", 
                             Count));
                 }
 
@@ -128,7 +128,7 @@ namespace DataStructuresNET.Arrays
                         "indexer",
                         index,
                         string.Format(
-                            "Indexer property index out of range. Shouldn't be less than 0 and equal or greater than Count ({0})",
+                            "Index must be non-negative and less than the array count ({0})",
                             Count));
                 }
 
@@ -234,8 +234,8 @@ namespace DataStructuresNET.Arrays
         /// Adds a range of items to the <see cref="CircularBuffer{T}"/>.
         /// </summary>
         /// <param name="collection">Array of items to add to thequeue.</param>
-        /// <param name="startIndex"><paramref name="colletion"/>'s starting element index.</param>
-        /// <param name="count">Number of items to enqueue starting on <paramref name="startIndex"/></param>
+        /// <param name="sourceIndex"><paramref name="colletion"/>'s starting element index.</param>
+        /// <param name="length">Number of items to enqueue starting on <paramref name="sourceIndex"/></param>
         /// <exception cref="ArgumentNullException"><paramref name="collection"/> is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">
         /// If <paramref name="collection"/> is lower than 0 (zero-based index)
@@ -245,10 +245,10 @@ namespace DataStructuresNET.Arrays
         /// If <paramref name="collection"/> is higher than the actual <see cref="CircularBuffer{T}"/> length.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// Number of elements to add, starting from <paramref name="startIndex"/>, exceeds 
+        /// Number of elements to add, starting from <paramref name="sourceIndex"/>, exceeds 
         /// the <see cref="CircularBuffer{T}"/>'s actual length.
         /// </exception>
-        public void EnqueueRange(T[] source, int startIndex, int count)
+        public void EnqueueRange(T[] source, int sourceIndex, int length)
         {
             lock (((ICollection)this).SyncRoot)
             {
@@ -259,22 +259,22 @@ namespace DataStructuresNET.Arrays
                         "Source cannot be null");
                 }
 
-                if (startIndex >= source.Length || startIndex < 0)
+                if (sourceIndex >= source.Length || sourceIndex < 0)
                 {
                     throw new ArgumentOutOfRangeException(
-                        "startIndex",
-                        startIndex,
+                        "sourceIndex",
+                        sourceIndex,
                         string.Format(
-                            "StartIndex argument is a zero-based index and it must be lower than source actual length ({0})",
+                            "SourceIndex argument is a zero-based index and it must be lower than source actual length ({0})",
                             source.Length));
                 }
 
-                if ((startIndex + count) > source.Length)
+                if ((sourceIndex + length) > source.Length)
                 {
                     throw new ArgumentException("Number of elements to add, starting from startIndex, exceeds the source actual length");
                 }
 
-                for (int i = startIndex; count > 0; count--, i++)
+                for (int i = sourceIndex; length > 0; length--, i++)
                 {
                     Enqueue(source[i]);
                 }
@@ -552,7 +552,7 @@ namespace DataStructuresNET.Arrays
 
         bool ICollection.IsSynchronized
         {
-            get { return false; }
+            get { return true; }
         }
 
         object ICollection.SyncRoot
