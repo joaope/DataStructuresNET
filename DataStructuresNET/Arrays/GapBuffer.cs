@@ -86,7 +86,7 @@ namespace DataStructuresNET.Arrays
                 fGapStart = value;
                 GapEnd = fGapStart + GapSize;
 
-                ResetGap();
+                // ResetGap(); // debug purposes only
             }
         }
 
@@ -373,7 +373,7 @@ namespace DataStructuresNET.Arrays
                 Array.Copy(Buffer, GapEnd, Buffer, GapEnd + GapSize, BufferEnd - GapEnd);
                 GapEnd += GapSize;
 
-                // ResetGap();
+                // ResetGap(); // debug purposes only
             }
         }
 
@@ -497,7 +497,7 @@ namespace DataStructuresNET.Arrays
                 Count += segmentLength;
                 EnsureGap();
 
-                // ResetGap();
+                // ResetGap(); // debug purposes only
 
                 itemsInserted += segmentLength;
             }
@@ -564,7 +564,7 @@ namespace DataStructuresNET.Arrays
             fGapStart = index;
             GapEnd = index + GapSize;
 
-            ResetGap();
+            // ResetGap(); // debug purposes only
         }
 
         /// <summary>
