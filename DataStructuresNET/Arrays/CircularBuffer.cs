@@ -23,12 +23,17 @@ namespace DataStructuresNET.Arrays
         /// <summary>
         /// Field for <see cref="ICollection.SyncRoot"/> property.
         /// </summary>
-        private object fSyncRoot;
+        private object syncRoot;
 
         /// <summary>
         /// Field for <see cref="Capacity"/> property.
         /// </summary>
-        private int fCapacity;
+        private int capacity;
+
+        /// <summary>
+        /// Internal buffer
+        /// </summary>
+        private T[] buffer;
 
         /// <summary>
         /// Gets and sets the buffer capacity.
@@ -44,13 +49,13 @@ namespace DataStructuresNET.Arrays
         {
             get
             {
-                return fCapacity;
+                return capacity;
             }
             set
             {
                 lock (((ICollection)this).SyncRoot)
                 {
-                    if (value == fCapacity)
+                    if (value == capacity)
                     {
                         return;
                     }
@@ -70,8 +75,8 @@ namespace DataStructuresNET.Arrays
                         CopyTo(destination);
                     }
 
-                    Buffer = destination;
-                    fCapacity = value;
+                    buffer = destination;
+                    capacity = value;
                 }
             }
         }
@@ -107,7 +112,7 @@ namespace DataStructuresNET.Arrays
                 }
 
                 var trueIndex = Head + index;
-                return Buffer[trueIndex >= Capacity ? trueIndex - Capacity : trueIndex];
+                return buffer[trueIndex >= Capacity ? trueIndex - Capacity : trueIndex];
             }
             set
             {
@@ -122,7 +127,7 @@ namespace DataStructuresNET.Arrays
                 }
 
                 var trueIndex = Head + index;
-                Buffer[trueIndex >= Capacity ? trueIndex - Capacity : trueIndex] = value;
+                buffer[trueIndex >= Capacity ? trueIndex - Capacity : trueIndex] = value;
             }
         }
 
@@ -171,11 +176,6 @@ namespace DataStructuresNET.Arrays
         public int Tail { get; private set; }
 
         /// <summary>
-        /// Gets and sets circular buffer data (internal property).
-        /// </summary>
-        internal T[] Buffer { get; set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="CircularBuffer{T}"/> class.
         /// </summary>
         /// <param name="capacity">The initial buffer's capacity.</param>
@@ -186,7 +186,7 @@ namespace DataStructuresNET.Arrays
             AllowOverwrite = allowOverwrite;
 
             Head = Tail = Count = 0;
-            Buffer = new T[Capacity];
+            buffer = new T[Capacity];
         }
 
         /// <summary>
@@ -210,7 +210,7 @@ namespace DataStructuresNET.Arrays
                     Count++;
                 }
 
-                Buffer[Tail] = item;
+                buffer[Tail] = item;
 
                 if (++Tail == Capacity)
                 {
@@ -291,11 +291,11 @@ namespace DataStructuresNET.Arrays
                         bufferIndex = 0;
                     }
 
-                    if (item == null && Buffer[bufferIndex] == null)
+                    if (item == null && buffer[bufferIndex] == null)
                     {
                         return true;
                     }
-                    if ((Buffer[bufferIndex] != null) && comparer.Equals(Buffer[bufferIndex], item))
+                    if ((buffer[bufferIndex] != null) && comparer.Equals(buffer[bufferIndex], item))
                     {
                         return true;
                     }
@@ -319,7 +319,7 @@ namespace DataStructuresNET.Arrays
                     throw new InvalidOperationException("CircularBuffer is empty");
                 }
 
-                var item = Buffer[Head];
+                var item = buffer[Head];
 
                 if (Head++ == Capacity)
                 {
@@ -345,7 +345,7 @@ namespace DataStructuresNET.Arrays
                     throw new InvalidOperationException("CircularBuffer is empty");
                 }
 
-                return Buffer[Head];
+                return buffer[Head];
             }
         }
 
@@ -382,7 +382,7 @@ namespace DataStructuresNET.Arrays
                 {
                     if (bufferIndex == Capacity)
                         bufferIndex = 0;
-                    array[startIndex] = Buffer[bufferIndex];
+                    array[startIndex] = buffer[bufferIndex];
                 }
             }
         }
@@ -432,7 +432,7 @@ namespace DataStructuresNET.Arrays
             lock (((ICollection)this).SyncRoot)
             {
                 Count = Tail = Head = 0;
-                Buffer = new T[Capacity];
+                buffer = new T[Capacity];
             }
         }
 
@@ -461,7 +461,7 @@ namespace DataStructuresNET.Arrays
             {
                 if (IsEmpty)
                 {
-                    Buffer = new T[Capacity];
+                    buffer = new T[Capacity];
                     Tail = 0;
                 }
                 else if (Count > 0 && (Count * 100 / Capacity) <= 90)
@@ -471,7 +471,7 @@ namespace DataStructuresNET.Arrays
                     var newBuffer = new T[newCapacity];
                     CopyTo(newBuffer);
 
-                    Buffer = newBuffer;
+                    buffer = newBuffer;
                     Capacity = newCapacity;
 
                     Tail = 0;
@@ -504,7 +504,7 @@ namespace DataStructuresNET.Arrays
                     {
                         currentIndex = 0;
                     }
-                    yield return Buffer[currentIndex];
+                    yield return buffer[currentIndex];
                 }
             }
         }
@@ -538,11 +538,11 @@ namespace DataStructuresNET.Arrays
         {
             get
             {
-                if (fSyncRoot == null)
+                if (syncRoot == null)
                 {
-                    Interlocked.CompareExchange(ref fSyncRoot, new object(), null);
+                    Interlocked.CompareExchange(ref syncRoot, new object(), null);
                 }
-                return fSyncRoot;
+                return syncRoot;
             }
         }
     }

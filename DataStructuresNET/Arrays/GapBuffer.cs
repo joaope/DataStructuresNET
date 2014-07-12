@@ -23,12 +23,12 @@ namespace DataStructuresNET.Arrays
         /// <summary>
         /// 
         /// </summary>
-        private object fSyncRoot;
+        private object syncRoot;
         
         /// <summary>
         /// 
         /// </summary>
-        private int fGapStart;
+        private int gapStart;
 
         /// <summary>
         /// 
@@ -37,11 +37,11 @@ namespace DataStructuresNET.Arrays
         {
             get
             {
-                return fGapStart;
+                return gapStart;
             }
             set
             {
-                if (value == fGapStart)
+                if (value == gapStart)
                 {
                     return;
                 }
@@ -56,18 +56,18 @@ namespace DataStructuresNET.Arrays
 
                 lock (((ICollection)this).SyncRoot)
                 {
-                    if (value > fGapStart)
+                    if (value > gapStart)
                     {
-                        var delta = value - fGapStart;
+                        var delta = value - gapStart;
 
                         var segment = new T[delta];
                         Array.Copy(buffer, (GapEnd == GapStart ? GapSize : GapEnd), segment, 0, delta);
 
-                        Array.Copy(segment, 0, buffer, fGapStart, delta);
+                        Array.Copy(segment, 0, buffer, gapStart, delta);
                     }
                     else
                     {
-                        var delta = fGapStart - value;
+                        var delta = gapStart - value;
 
                         var segment = new T[delta];
                         Array.Copy(buffer, GapStart - delta, segment, 0, delta);
@@ -75,8 +75,8 @@ namespace DataStructuresNET.Arrays
                         Array.Copy(segment, 0, buffer, GapEnd - delta, delta);
                     }
 
-                    fGapStart = value;
-                    GapEnd = fGapStart + GapSize;
+                    gapStart = value;
+                    GapEnd = gapStart + GapSize;
 
                     // ResetGap(); // debug purposes only
                 }
@@ -136,12 +136,12 @@ namespace DataStructuresNET.Arrays
         /// <summary>
         /// 
         /// </summary>
-        private int InitialCapacity { get; set; }
+        private readonly int initialCapatity;
 
         /// <summary>
         /// 
         /// </summary>
-        private int fCapacity;
+        private int capacity;
 
         /// <summary>
         /// Gets or sets the total number of elements the internal data structure can hold without resizing.
@@ -150,11 +150,11 @@ namespace DataStructuresNET.Arrays
         {
             get
             {
-                return fCapacity;
+                return capacity;
             }
             set
             {
-                if (value == fCapacity)
+                if (value == capacity)
                 {
                     return;
                 }
@@ -169,8 +169,8 @@ namespace DataStructuresNET.Arrays
 
                 lock (((ICollection)this).SyncRoot)
                 {
-                    fCapacity = value;
-                    Array.Resize(ref buffer, fCapacity + GapSize);
+                    capacity = value;
+                    Array.Resize(ref buffer, capacity + GapSize);
                 }
             }
         }
@@ -224,16 +224,16 @@ namespace DataStructuresNET.Arrays
 
             lock (((ICollection)this).SyncRoot)
             {
-                fSyncRoot = new Object();
+                syncRoot = new Object();
 
                 var bufSize = capacity + gapSize;
                 buffer = new T[(bufSize == 0 ? 4 : bufSize)];
 
                 GapSize = gapSize;
-                fGapStart = 0;
+                gapStart = 0;
                 GapEnd = gapSize;
                 Count = 0;
-                InitialCapacity = Capacity = capacity;
+                initialCapatity = Capacity = capacity;
             }
         }
 
@@ -246,7 +246,7 @@ namespace DataStructuresNET.Arrays
             {
                 Array.Clear(buffer, 0, buffer.Length);
 
-                fGapStart = 0;
+                gapStart = 0;
                 GapEnd = GapSize;
                 Count = 0;
             }
@@ -263,7 +263,7 @@ namespace DataStructuresNET.Arrays
             {
                 var comparer = EqualityComparer<T>.Default;
 
-                for (var i = 0; i < fGapStart; i++)
+                for (var i = 0; i < gapStart; i++)
                 {
                     if (comparer.Equals(buffer[i], item))
                     {
@@ -322,9 +322,9 @@ namespace DataStructuresNET.Arrays
 
                 lock (((ICollection)this).SyncRoot)
                 {
-                    if (index >= fGapStart)
+                    if (index >= gapStart)
                     {
-                        index = GapEnd + (index - fGapStart);
+                        index = GapEnd + (index - gapStart);
                     }
 
                     return buffer[index];
@@ -344,9 +344,9 @@ namespace DataStructuresNET.Arrays
 
                 lock (((ICollection)this).SyncRoot)
                 {
-                    if (index >= fGapStart)
+                    if (index >= gapStart)
                     {
-                        index = GapEnd + (index - fGapStart);
+                        index = GapEnd + (index - gapStart);
                     }
 
                     buffer[index] = value;
@@ -472,7 +472,7 @@ namespace DataStructuresNET.Arrays
             {
                 buffer[GapStart] = item;
                 Count++;
-                fGapStart++;
+                gapStart++;
 
                 EnsureGap();
             }
@@ -524,7 +524,7 @@ namespace DataStructuresNET.Arrays
                     Array.Copy(source, itemsInserted, segmentToInsert, 0, segmentLength);
 
                     Array.Copy(segmentToInsert, 0, buffer, GapStart, segmentLength);
-                    fGapStart += segmentLength;
+                    gapStart += segmentLength;
                     Count += segmentLength;
                     EnsureGap();
 
@@ -553,7 +553,7 @@ namespace DataStructuresNET.Arrays
             {
                 if (IsEmpty)
                 {
-                    Capacity = InitialCapacity;
+                    Capacity = initialCapatity;
                     buffer = new T[Capacity];
                 }
                 else
@@ -598,7 +598,7 @@ namespace DataStructuresNET.Arrays
                 Array.Copy(bufferWithoutGap, index + count, buffer, index + GapSize, bufferWithoutGap.Length - index - count);
 
                 Count -= count;
-                fGapStart = index;
+                gapStart = index;
                 GapEnd = index + GapSize;
 
                 // ResetGap(); // debug purposes only
@@ -631,7 +631,7 @@ namespace DataStructuresNET.Arrays
                 var comparer = EqualityComparer<T>.Default;
                 var i = index;
 
-                for (; i < fGapStart; i++)
+                for (; i < gapStart; i++)
                 {
                     if (i == count)
                     {
@@ -710,7 +710,7 @@ namespace DataStructuresNET.Arrays
         {
             lock (((ICollection)this).SyncRoot)
             {
-                for (var i = 0; i < fGapStart; i++)
+                for (var i = 0; i < gapStart; i++)
                 {
                     yield return buffer[i];
                 }
@@ -818,25 +818,15 @@ namespace DataStructuresNET.Arrays
                 CountWithGap);
         }
 
-        #region IEnumerable explicit implementation
-
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
 
-        #endregion
-
-        #region IEnumerable<T> explicit implementation
-
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             return GetEnumerator();
         }
-
-        #endregion
-
-        #region ICollection explicit implementation
 
         void ICollection.CopyTo(Array array, int index)
         {
@@ -857,14 +847,12 @@ namespace DataStructuresNET.Arrays
         {
             get
             {
-                if (fSyncRoot == null)
+                if (syncRoot == null)
                 {
-                    Interlocked.CompareExchange(ref fSyncRoot, new object(), null);
+                    Interlocked.CompareExchange(ref syncRoot, new object(), null);
                 }
-                return fSyncRoot;
+                return syncRoot;
             }
         }
-
-        #endregion
     }
 }
