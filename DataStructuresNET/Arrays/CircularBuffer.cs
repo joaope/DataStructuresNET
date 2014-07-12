@@ -63,7 +63,7 @@ namespace DataStructuresNET.Arrays
                             string.Format("Capacity must be greater than or equal to the current buffer size, which is {0}", Count));
                     }
 
-                    T[] destination = new T[value];
+                    var destination = new T[value];
 
                     if (Count > 0)
                     {
@@ -106,7 +106,7 @@ namespace DataStructuresNET.Arrays
                             Count));
                 }
 
-                int trueIndex = Head + index;
+                var trueIndex = Head + index;
                 return Buffer[trueIndex >= Capacity ? trueIndex - Capacity : trueIndex];
             }
             set
@@ -121,7 +121,7 @@ namespace DataStructuresNET.Arrays
                             Count));
                 }
 
-                int trueIndex = Head + index;
+                var trueIndex = Head + index;
                 Buffer[trueIndex >= Capacity ? trueIndex - Capacity : trueIndex] = value;
             }
         }
@@ -263,7 +263,7 @@ namespace DataStructuresNET.Arrays
                     throw new ArgumentException("Number of elements to add, starting from startIndex, exceeds the source actual length");
                 }
 
-                for (int i = sourceIndex; length > 0; length--, i++)
+                for (var i = sourceIndex; length > 0; length--, i++)
                 {
                     Enqueue(source[i]);
                 }
@@ -284,7 +284,7 @@ namespace DataStructuresNET.Arrays
                 var bufferIndex = Head;
                 var comparer = EqualityComparer<T>.Default;
 
-                for (int i = 0; i < Count; i++, bufferIndex++)
+                for (var i = 0; i < Count; i++, bufferIndex++)
                 {
                     if (bufferIndex == Capacity)
                     {
@@ -319,7 +319,7 @@ namespace DataStructuresNET.Arrays
                     throw new InvalidOperationException("CircularBuffer is empty");
                 }
 
-                T item = Buffer[Head];
+                var item = Buffer[Head];
 
                 if (Head++ == Capacity)
                 {
@@ -377,8 +377,8 @@ namespace DataStructuresNET.Arrays
                         string.Format("Number of elements to copy, starting from startIndex, exceeds buffer length ({0})", Count));
                 }
 
-                int bufferIndex = Head;
-                for (int i = 0; i < count; i++, bufferIndex++, startIndex++)
+                var bufferIndex = Head;
+                for (var i = 0; i < count; i++, bufferIndex++, startIndex++)
                 {
                     if (bufferIndex == Capacity)
                         bufferIndex = 0;
@@ -418,7 +418,7 @@ namespace DataStructuresNET.Arrays
         {
             lock (((ICollection)this).SyncRoot)
             {
-                T[] array = new T[Count];
+                var array = new T[Count];
                 CopyTo(array);
                 return array;
             }
@@ -496,9 +496,9 @@ namespace DataStructuresNET.Arrays
         {
             lock (((ICollection)this).SyncRoot)
             {
-                int currentIndex = Head;
+                var currentIndex = Head;
 
-                for (int i = 0; i < Count; i++, currentIndex++)
+                for (var i = 0; i < Count; i++, currentIndex++)
                 {
                     if (currentIndex == Capacity)
                     {

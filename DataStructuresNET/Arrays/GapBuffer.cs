@@ -58,18 +58,18 @@ namespace DataStructuresNET.Arrays
                 {
                     if (value > fGapStart)
                     {
-                        int delta = value - fGapStart;
+                        var delta = value - fGapStart;
 
-                        T[] segment = new T[delta];
+                        var segment = new T[delta];
                         Array.Copy(buffer, (GapEnd == GapStart ? GapSize : GapEnd), segment, 0, delta);
 
                         Array.Copy(segment, 0, buffer, fGapStart, delta);
                     }
                     else
                     {
-                        int delta = fGapStart - value;
+                        var delta = fGapStart - value;
 
-                        T[] segment = new T[delta];
+                        var segment = new T[delta];
                         Array.Copy(buffer, GapStart - delta, segment, 0, delta);
 
                         Array.Copy(segment, 0, buffer, GapEnd - delta, delta);
@@ -226,7 +226,7 @@ namespace DataStructuresNET.Arrays
             {
                 fSyncRoot = new Object();
 
-                int bufSize = capacity + gapSize;
+                var bufSize = capacity + gapSize;
                 buffer = new T[(bufSize == 0 ? 4 : bufSize)];
 
                 GapSize = gapSize;
@@ -263,7 +263,7 @@ namespace DataStructuresNET.Arrays
             {
                 var comparer = EqualityComparer<T>.Default;
 
-                for (int i = 0; i < fGapStart; i++)
+                for (var i = 0; i < fGapStart; i++)
                 {
                     if (comparer.Equals(buffer[i], item))
                     {
@@ -271,8 +271,8 @@ namespace DataStructuresNET.Arrays
                     }
                 }
 
-                int end = BufferEnd;
-                for (int i = GapEnd; i < end; i++)
+                var end = BufferEnd;
+                for (var i = GapEnd; i < end; i++)
                 {
                     if (comparer.Equals(buffer[i], item))
                     {
@@ -362,11 +362,11 @@ namespace DataStructuresNET.Arrays
         {
             lock (((ICollection)this).SyncRoot)
             {
-                int totalItems = CountWithGap + itemsToAdd;
+                var totalItems = CountWithGap + itemsToAdd;
 
                 if (totalItems > Capacity)
                 {
-                    int newCapacity = (Capacity == 0 ? 4 : Capacity);
+                    var newCapacity = (Capacity == 0 ? 4 : Capacity);
 
                     while (newCapacity < totalItems) // double until satisfy
                     {
@@ -520,7 +520,7 @@ namespace DataStructuresNET.Arrays
                 {
                     var segmentLength = (itemsInserted + CurrentGapSize <= source.Length ? CurrentGapSize : source.Length - itemsInserted);
 
-                    T[] segmentToInsert = new T[segmentLength];
+                    var segmentToInsert = new T[segmentLength];
                     Array.Copy(source, itemsInserted, segmentToInsert, 0, segmentLength);
 
                     Array.Copy(segmentToInsert, 0, buffer, GapStart, segmentLength);
@@ -589,7 +589,7 @@ namespace DataStructuresNET.Arrays
 
             lock (((ICollection)this).SyncRoot)
             {
-                T[] bufferWithoutGap = new T[buffer.Length - GapSize];
+                var bufferWithoutGap = new T[buffer.Length - GapSize];
                 Array.Copy(buffer, 0, bufferWithoutGap, 0, GapStart);
                 Array.Copy(buffer, GapEnd, bufferWithoutGap, GapStart, buffer.Length - GapEnd);
 
@@ -629,7 +629,7 @@ namespace DataStructuresNET.Arrays
             lock (((ICollection)this).SyncRoot)
             {
                 var comparer = EqualityComparer<T>.Default;
-                int i = index;
+                var i = index;
 
                 for (; i < fGapStart; i++)
                 {
@@ -644,8 +644,8 @@ namespace DataStructuresNET.Arrays
                     }
                 }
 
-                int end = BufferEnd;
-                for (int j = GapEnd; j < end; j++, i++)
+                var end = BufferEnd;
+                for (var j = GapEnd; j < end; j++, i++)
                 {
                     if (i == count)
                     {
@@ -710,13 +710,13 @@ namespace DataStructuresNET.Arrays
         {
             lock (((ICollection)this).SyncRoot)
             {
-                for (int i = 0; i < fGapStart; i++)
+                for (var i = 0; i < fGapStart; i++)
                 {
                     yield return buffer[i];
                 }
 
-                int end = BufferEnd;
-                for (int i = GapEnd; i < end; i++)
+                var end = BufferEnd;
+                for (var i = GapEnd; i < end; i++)
                 {
                     yield return buffer[i];
                 }

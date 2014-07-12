@@ -13,10 +13,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DataStructuresNET.Tests.Arrays
 {
-    /// <summary>
-    /// </summary>
-    /// <remarks>
-    /// </remarks>
     [TestClass]
     public class GapBufferTests
     {
