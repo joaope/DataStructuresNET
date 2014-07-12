@@ -176,11 +176,20 @@ namespace DataStructuresNET.Arrays
         public int Tail { get; private set; }
 
         /// <summary>
+        /// Initializes a new instance of <see cref="CircularBuffer{T}"/> class with
+        /// a capacity for 255 objects and which allows overwritting.
+        /// </summary>
+        public CircularBuffer()
+            : this(255, true)
+        {
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CircularBuffer{T}"/> class.
         /// </summary>
         /// <param name="capacity">The initial buffer's capacity.</param>
         /// <param name="allowOverwrite">Indicates if elements overwrite is allowed.</param>
-        public CircularBuffer(int capacity = 255, bool allowOverwrite = true)
+        public CircularBuffer(int capacity, bool allowOverwrite)
         {
             Capacity = capacity;
             AllowOverwrite = allowOverwrite;
@@ -442,7 +451,7 @@ namespace DataStructuresNET.Arrays
         /// </summary>
         /// <remarks>
         /// This method can be used to minimize a collection's memory overhead if no new elements will be 
-        /// added to the collection. The cost of reallocating and copying a large Queue<T>can be considerable, 
+        /// added to the collection. The cost of reallocating and copying a large <see cref="CircularBuffer{T}"/> be considerable, 
         /// however, the <b>TrimExcess</b> method does nothing if the list is at more than 90 percent of capacity.
         /// This avoids incurring a large reallocation cost for a relatively small gain.
         /// 

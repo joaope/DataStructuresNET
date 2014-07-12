@@ -197,12 +197,17 @@ namespace DataStructuresNET.Arrays
             }
         }
 
+        public GapBuffer()
+            : this(0, 0)
+        {
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="gapSize"></param>
         /// <param name="capacity"></param>
-        public GapBuffer(int gapSize = 0, int capacity = 0)
+        public GapBuffer(int gapSize, int capacity)
         {
             if (gapSize < 0)
             {
