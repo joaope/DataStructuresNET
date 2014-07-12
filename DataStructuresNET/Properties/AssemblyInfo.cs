@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("João Correia")]
 [assembly: AssemblyProduct("DataStructuresNET")]
-[assembly: AssemblyCopyright("Copyright © João Correia 2011")]
+[assembly: AssemblyCopyright("Copyright © João Correia 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

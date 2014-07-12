@@ -1,16 +1,14 @@
-﻿#region Copyright © 2011, João Correia
+﻿#region Copyright © 2014, João Correia
 //
-// Copyright © 2011, João Correia
+// Copyright © 2014, João Correia
 // All rights reserved
 // http://joaope.github.com
 //
 #endregion
 
-#region Using
 using System;
 using DataStructuresNET.Arrays;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endregion
 
 namespace DataStructuresNET.Tests.Arrays
 {
@@ -18,14 +16,6 @@ namespace DataStructuresNET.Tests.Arrays
     /// </summary>
     /// <remarks>
     /// </remarks>
-    /// <author>João Correia</author>
-    /// <owner>João Correia</owner>
-    /// <history>
-    /// __________________________________________________________________________
-    /// History :
-    /// 20110728 jcorreia [+] Initial version
-    /// __________________________________________________________________________
-    /// </history>
     [TestClass]
     public class CircularBufferTests
     {
@@ -34,30 +24,30 @@ namespace DataStructuresNET.Tests.Arrays
         {
             var buffer = new CircularBuffer<int>(10);
             buffer.EnqueueRange(
-                new int[5] { 12, 4, 9, 43, 0 }, 
+                new[] { 12, 4, 9, 43, 0 }, 
                 0, 5);
 
-            Assert.AreEqual<int>(12, buffer[0]);
-            Assert.AreEqual<int>(0, buffer[4]);
+            Assert.AreEqual(12, buffer[0]);
+            Assert.AreEqual(0, buffer[4]);
 
             buffer.TrimExcess();
-            buffer.EnqueueRange(new int[] { 99, 100 }, 0, 2);
+            buffer.EnqueueRange(new[] { 99, 100 }, 0, 2);
 
-            Assert.AreEqual<int>(99, buffer[0]);
-            Assert.AreEqual<int>(9, buffer[2]);
+            Assert.AreEqual(99, buffer[0]);
+            Assert.AreEqual(9, buffer[2]);
         }
 
         [TestMethod]
         public void CircularBuffer_CopyTo()
         {
-            var data = new int[5] { 12, 4, 9, 43, 0 };
+            var data = new[] { 12, 4, 9, 43, 0 };
             var buffer = new CircularBuffer<int>(10);
             buffer.EnqueueRange(data, 0, data.Length);
 
             var dataCopy = new int[5];
             buffer.CopyTo(dataCopy, 0, 5);
 
-            CollectionAssert.AreEqual(new int[5] { 12, 4, 9, 43, 0 }, dataCopy);
+            CollectionAssert.AreEqual(new[] { 12, 4, 9, 43, 0 }, dataCopy);
         }
 
         [TestMethod]
@@ -67,11 +57,11 @@ namespace DataStructuresNET.Tests.Arrays
             buffer.Enqueue("test");
             buffer.Enqueue("string");
 
-            CollectionAssert.AreEqual(new string[] { "test", "string" }, buffer.ToArray());
-            Assert.AreEqual<int>(2, buffer.Count);
-            Assert.AreEqual<int>(10, buffer.Capacity);
-            Assert.AreEqual<int>(0, buffer.Head);
-            Assert.AreEqual<int>(2, buffer.Tail);
+            CollectionAssert.AreEqual(new[] { "test", "string" }, buffer.ToArray());
+            Assert.AreEqual(2, buffer.Count);
+            Assert.AreEqual(10, buffer.Capacity);
+            Assert.AreEqual(0, buffer.Head);
+            Assert.AreEqual(2, buffer.Tail);
             Assert.IsTrue(buffer.Contains("string"));
             Assert.IsFalse(buffer.Contains("other string"));
         }
@@ -84,10 +74,10 @@ namespace DataStructuresNET.Tests.Arrays
             buffer.EnqueueRange(data, 0, data.Length);
 
             CollectionAssert.AreEqual(data, buffer.ToArray());
-            Assert.AreEqual<int>(data.Length, buffer.Count);
-            Assert.AreEqual<int>(data.Length, buffer.Capacity);
-            Assert.AreEqual<int>(0, buffer.Head);
-            Assert.AreEqual<int>(0, buffer.Tail);
+            Assert.AreEqual(data.Length, buffer.Count);
+            Assert.AreEqual(data.Length, buffer.Capacity);
+            Assert.AreEqual(0, buffer.Head);
+            Assert.AreEqual(0, buffer.Tail);
             Assert.IsTrue(buffer.Contains("a"));
             Assert.IsFalse(buffer.Contains("z"));
         }
@@ -111,11 +101,11 @@ namespace DataStructuresNET.Tests.Arrays
 
             buffer.Enqueue("z");
 
-            CollectionAssert.AreEqual(new string[] { "z", "b", "c", "d" }, buffer.ToArray());
-            Assert.AreEqual<int>(data.Length, buffer.Count);
-            Assert.AreEqual<int>(data.Length, buffer.Capacity);
-            Assert.AreEqual<int>(0, buffer.Head);
-            Assert.AreEqual<int>(1, buffer.Tail);
+            CollectionAssert.AreEqual(new[] { "z", "b", "c", "d" }, buffer.ToArray());
+            Assert.AreEqual(data.Length, buffer.Count);
+            Assert.AreEqual(data.Length, buffer.Capacity);
+            Assert.AreEqual(0, buffer.Head);
+            Assert.AreEqual(1, buffer.Tail);
             Assert.IsTrue(buffer.Contains("z"));
             Assert.IsFalse(buffer.Contains("a"));
         }
@@ -124,16 +114,16 @@ namespace DataStructuresNET.Tests.Arrays
         public void CircularBuffer_EnqueueAfterTrimExcess()
         {
             var buffer = new CircularBuffer<string>(10);
-            buffer.EnqueueRange(new string[] { "a", "b", "c" }, 0, 3);
+            buffer.EnqueueRange(new[] { "a", "b", "c" }, 0, 3);
 
             buffer.TrimExcess();
             buffer.Enqueue("z");
 
-            CollectionAssert.AreEqual(new string[] { "z", "b", "c" }, buffer.ToArray());
-            Assert.AreEqual<int>(3, buffer.Count);
-            Assert.AreEqual<int>(3, buffer.Capacity);
-            Assert.AreEqual<int>(0, buffer.Head);
-            Assert.AreEqual<int>(1, buffer.Tail);
+            CollectionAssert.AreEqual(new[] { "z", "b", "c" }, buffer.ToArray());
+            Assert.AreEqual(3, buffer.Count);
+            Assert.AreEqual(3, buffer.Capacity);
+            Assert.AreEqual(0, buffer.Head);
+            Assert.AreEqual(1, buffer.Tail);
             Assert.IsTrue(buffer.Contains("z"));
             Assert.IsFalse(buffer.Contains("a"));
         }
@@ -147,13 +137,13 @@ namespace DataStructuresNET.Tests.Arrays
 
             buffer.Dequeue();
 
-            Assert.AreEqual<int>(3, buffer.Count);
-            Assert.AreEqual<int>(data.Length, buffer.Capacity);
-            Assert.AreEqual<int>(1, buffer.Head);
-            Assert.AreEqual<int>(0, buffer.Tail);
+            Assert.AreEqual(3, buffer.Count);
+            Assert.AreEqual(data.Length, buffer.Capacity);
+            Assert.AreEqual(1, buffer.Head);
+            Assert.AreEqual(0, buffer.Tail);
             Assert.IsTrue(buffer.Contains(1));
             Assert.IsFalse(buffer.Contains(0));
-            CollectionAssert.AreEqual(new int[] { 1, 2, 3 }, buffer.ToArray());
+            CollectionAssert.AreEqual(new[] { 1, 2, 3 }, buffer.ToArray());
         }
 
         [TestMethod]
@@ -161,7 +151,7 @@ namespace DataStructuresNET.Tests.Arrays
         public void CircularBuffer_DequeueWhenEmpty()
         {
             var buffer = new CircularBuffer<string>();
-            string s = buffer.Dequeue();
+            buffer.Dequeue();
         }
 
         [TestMethod]
@@ -173,13 +163,13 @@ namespace DataStructuresNET.Tests.Arrays
 
             buffer.TrimExcess();
 
-            Assert.AreEqual<int>(2, buffer.Count);
-            Assert.AreEqual<int>(2, buffer.Capacity);
-            Assert.AreEqual<int>(0, buffer.Head);
-            Assert.AreEqual<int>(0, buffer.Tail);
+            Assert.AreEqual(2, buffer.Count);
+            Assert.AreEqual(2, buffer.Capacity);
+            Assert.AreEqual(0, buffer.Head);
+            Assert.AreEqual(0, buffer.Tail);
             Assert.IsTrue(buffer.Contains("a"));
             Assert.IsFalse(buffer.Contains("z"));
-            CollectionAssert.AreEqual(new string[] { "a", "b" }, buffer.ToArray());
+            CollectionAssert.AreEqual(new[] { "a", "b" }, buffer.ToArray());
         }
     }
 }

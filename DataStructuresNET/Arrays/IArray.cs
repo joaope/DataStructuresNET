@@ -1,15 +1,13 @@
-﻿#region Copyright © 2011, João Correia
+﻿#region Copyright © 2014, João Correia
 //
-// Copyright © 2011, João Correia
+// Copyright © 2014, João Correia
 // All rights reserved
 // http://joaope.github.com
 //
 #endregion
 
-#region Using
 using System.Collections;
 using System.Collections.Generic;
-#endregion
 
 namespace DataStructuresNET.Arrays
 {
@@ -17,16 +15,8 @@ namespace DataStructuresNET.Arrays
     /// </summary>
     /// <remarks>
     /// </remarks>
-    /// <author>João Correia</author>
-    /// <owner>João Correia</owner>
-    /// <history>
-    /// __________________________________________________________________________
-    /// History :
-    /// 20110701 jcorreia [+] Initial version
-    /// __________________________________________________________________________
-    /// </history>
     public interface IArray<T>
-        : IEnumerable, IEnumerable<T>, ICollection
+        : IEnumerable<T>, ICollection
     {
         /// <summary>
         /// 

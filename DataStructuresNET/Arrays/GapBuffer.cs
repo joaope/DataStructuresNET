@@ -1,17 +1,15 @@
-﻿#region Copyright © 2011, João Correia
+﻿#region Copyright © 2014, João Correia
 //
-// Copyright © 2011, João Correia
+// Copyright © 2014, João Correia
 // All rights reserved
 // http://joaope.github.com
 //
 #endregion
 
-#region Using
 using System;
 using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
-#endregion
 
 namespace DataStructuresNET.Arrays
 {
@@ -19,14 +17,6 @@ namespace DataStructuresNET.Arrays
     /// </summary>
     /// <remarks>
     /// </remarks>
-    /// <author>João Correia</author>
-    /// <owner>João Correia</owner>
-    /// <history>
-    /// __________________________________________________________________________
-    /// History :
-    /// 20110630 jcorreia [+] Initial version
-    /// __________________________________________________________________________
-    /// </history>
     public class GapBuffer<T>
         : IArray<T>
     {
@@ -59,7 +49,7 @@ namespace DataStructuresNET.Arrays
                 if (value < 0 || value >= Count)
                 {
                     throw new ArgumentOutOfRangeException(
-                        "GapStart",
+                        "value",
                         value,
                         "GapStart can't be lower than 0 and higher or equal to Count");
                 }
@@ -71,18 +61,18 @@ namespace DataStructuresNET.Arrays
                         int delta = value - fGapStart;
 
                         T[] segment = new T[delta];
-                        Array.Copy(Buffer, (GapEnd == GapStart ? GapSize : GapEnd), segment, 0, delta);
+                        Array.Copy(buffer, (GapEnd == GapStart ? GapSize : GapEnd), segment, 0, delta);
 
-                        Array.Copy(segment, 0, Buffer, fGapStart, delta);
+                        Array.Copy(segment, 0, buffer, fGapStart, delta);
                     }
                     else
                     {
                         int delta = fGapStart - value;
 
                         T[] segment = new T[delta];
-                        Array.Copy(Buffer, GapStart - delta, segment, 0, delta);
+                        Array.Copy(buffer, GapStart - delta, segment, 0, delta);
 
-                        Array.Copy(segment, 0, Buffer, GapEnd - delta, delta);
+                        Array.Copy(segment, 0, buffer, GapEnd - delta, delta);
                     }
 
                     fGapStart = value;
@@ -128,7 +118,7 @@ namespace DataStructuresNET.Arrays
         /// <summary>
         /// 
         /// </summary>
-        private T[] Buffer;
+        private T[] buffer;
 
         /// <summary>
         /// 
@@ -172,7 +162,7 @@ namespace DataStructuresNET.Arrays
                 if (value < CountWithGap)
                 {
                     throw new ArgumentOutOfRangeException(
-                        "Capacity",
+                        "value",
                         value,
                         string.Format("Capacity must be greater than or equal to CountWithGap value ({0})", CountWithGap));
                 }
@@ -180,7 +170,7 @@ namespace DataStructuresNET.Arrays
                 lock (((ICollection)this).SyncRoot)
                 {
                     fCapacity = value;
-                    Array.Resize<T>(ref Buffer, fCapacity + GapSize);
+                    Array.Resize(ref buffer, fCapacity + GapSize);
                 }
             }
         }
@@ -211,6 +201,7 @@ namespace DataStructuresNET.Arrays
         /// 
         /// </summary>
         /// <param name="gapSize"></param>
+        /// <param name="capacity"></param>
         public GapBuffer(int gapSize = 0, int capacity = 0)
         {
             if (gapSize < 0)
@@ -236,7 +227,7 @@ namespace DataStructuresNET.Arrays
                 fSyncRoot = new Object();
 
                 int bufSize = capacity + gapSize;
-                Buffer = new T[(bufSize == 0 ? 4 : bufSize)];
+                buffer = new T[(bufSize == 0 ? 4 : bufSize)];
 
                 GapSize = gapSize;
                 fGapStart = 0;
@@ -253,7 +244,7 @@ namespace DataStructuresNET.Arrays
         {
             lock (((ICollection)this).SyncRoot)
             {
-                Array.Clear(Buffer, 0, Buffer.Length);
+                Array.Clear(buffer, 0, buffer.Length);
 
                 fGapStart = 0;
                 GapEnd = GapSize;
@@ -274,7 +265,7 @@ namespace DataStructuresNET.Arrays
 
                 for (int i = 0; i < fGapStart; i++)
                 {
-                    if (comparer.Equals(Buffer[i], item))
+                    if (comparer.Equals(buffer[i], item))
                     {
                         return true;
                     }
@@ -283,7 +274,7 @@ namespace DataStructuresNET.Arrays
                 int end = BufferEnd;
                 for (int i = GapEnd; i < end; i++)
                 {
-                    if (comparer.Equals(Buffer[i], item))
+                    if (comparer.Equals(buffer[i], item))
                     {
                         return true;
                     }
@@ -303,8 +294,8 @@ namespace DataStructuresNET.Arrays
             {
                 var array = new T[Count];
 
-                Array.Copy(Buffer, 0, array, 0, GapStart);
-                Array.Copy(Buffer, GapEnd, array, GapStart, BufferEnd - GapEnd);
+                Array.Copy(buffer, 0, array, 0, GapStart);
+                Array.Copy(buffer, GapEnd, array, GapStart, BufferEnd - GapEnd);
 
                 return array;
             }
@@ -336,7 +327,7 @@ namespace DataStructuresNET.Arrays
                         index = GapEnd + (index - fGapStart);
                     }
 
-                    return Buffer[index];
+                    return buffer[index];
                 }
             }
             set
@@ -358,7 +349,7 @@ namespace DataStructuresNET.Arrays
                         index = GapEnd + (index - fGapStart);
                     }
 
-                    Buffer[index] = value;
+                    buffer[index] = value;
                 }
             }
         }
@@ -382,7 +373,7 @@ namespace DataStructuresNET.Arrays
                         newCapacity *= 2;
                     }
 
-                    Array.Resize<T>(ref Buffer, newCapacity);
+                    Array.Resize(ref buffer, newCapacity);
                     Capacity = newCapacity;
                 }
             }
@@ -399,7 +390,7 @@ namespace DataStructuresNET.Arrays
                 {
                     ExpandCapacityIfNecessary(0);
 
-                    Array.Copy(Buffer, GapEnd, Buffer, GapEnd + GapSize, BufferEnd - GapEnd);
+                    Array.Copy(buffer, GapEnd, buffer, GapEnd + GapSize, BufferEnd - GapEnd);
                     GapEnd += GapSize;
 
                     // ResetGap(); // debug purposes only
@@ -417,7 +408,7 @@ namespace DataStructuresNET.Arrays
             {
                 ExpandCapacityIfNecessary(1);
 
-                Buffer[BufferEnd] = item;
+                buffer[BufferEnd] = item;
                 Count++;
             }
         }
@@ -454,7 +445,7 @@ namespace DataStructuresNET.Arrays
             {
                 ExpandCapacityIfNecessary(source.Length);
 
-                Array.Copy(source, 0, Buffer, BufferEnd, source.Length);
+                Array.Copy(source, 0, buffer, BufferEnd, source.Length);
                 Count += source.Length;
             }
         }
@@ -462,7 +453,7 @@ namespace DataStructuresNET.Arrays
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="index"></param>
+        /// <param name="newGapStart"></param>
         /// <param name="item"></param>
         public void Insert(int newGapStart, T item)
         {
@@ -479,7 +470,7 @@ namespace DataStructuresNET.Arrays
 
             lock (((ICollection)this).SyncRoot)
             {
-                Buffer[GapStart] = item;
+                buffer[GapStart] = item;
                 Count++;
                 fGapStart++;
 
@@ -523,17 +514,16 @@ namespace DataStructuresNET.Arrays
 
             lock (((ICollection)this).SyncRoot)
             {
-                int itemsInserted = 0;
-                int segmentLength = 0;
+                var itemsInserted = 0;
 
                 while (itemsInserted < source.Length)
                 {
-                    segmentLength = (itemsInserted + CurrentGapSize <= source.Length ? CurrentGapSize : source.Length - itemsInserted);
+                    var segmentLength = (itemsInserted + CurrentGapSize <= source.Length ? CurrentGapSize : source.Length - itemsInserted);
 
                     T[] segmentToInsert = new T[segmentLength];
                     Array.Copy(source, itemsInserted, segmentToInsert, 0, segmentLength);
 
-                    Array.Copy(segmentToInsert, 0, Buffer, GapStart, segmentLength);
+                    Array.Copy(segmentToInsert, 0, buffer, GapStart, segmentLength);
                     fGapStart += segmentLength;
                     Count += segmentLength;
                     EnsureGap();
@@ -564,14 +554,14 @@ namespace DataStructuresNET.Arrays
                 if (IsEmpty)
                 {
                     Capacity = InitialCapacity;
-                    Buffer = new T[Capacity];
+                    buffer = new T[Capacity];
                 }
                 else
                 {
                     if (CountWithGap <= Capacity * 0.9)
                     {
                         Capacity = CountWithGap;
-                        Array.Resize<T>(ref Buffer, Capacity);
+                        Array.Resize(ref buffer, Capacity);
                     }
                 }
             }
@@ -599,13 +589,13 @@ namespace DataStructuresNET.Arrays
 
             lock (((ICollection)this).SyncRoot)
             {
-                T[] bufferWithoutGap = new T[Buffer.Length - GapSize];
-                Array.Copy(Buffer, 0, bufferWithoutGap, 0, GapStart);
-                Array.Copy(Buffer, GapEnd, bufferWithoutGap, GapStart, Buffer.Length - GapEnd);
+                T[] bufferWithoutGap = new T[buffer.Length - GapSize];
+                Array.Copy(buffer, 0, bufferWithoutGap, 0, GapStart);
+                Array.Copy(buffer, GapEnd, bufferWithoutGap, GapStart, buffer.Length - GapEnd);
 
-                Array.Clear(Buffer, 0, Buffer.Length);
-                Array.Copy(bufferWithoutGap, 0, Buffer, 0, index);
-                Array.Copy(bufferWithoutGap, index + count, Buffer, index + GapSize, bufferWithoutGap.Length - index - count);
+                Array.Clear(buffer, 0, buffer.Length);
+                Array.Copy(bufferWithoutGap, 0, buffer, 0, index);
+                Array.Copy(bufferWithoutGap, index + count, buffer, index + GapSize, bufferWithoutGap.Length - index - count);
 
                 Count -= count;
                 fGapStart = index;
@@ -648,7 +638,7 @@ namespace DataStructuresNET.Arrays
                         return -1;
                     }
 
-                    if (comparer.Equals(Buffer[i], item))
+                    if (comparer.Equals(buffer[i], item))
                     {
                         return i;
                     }
@@ -662,7 +652,7 @@ namespace DataStructuresNET.Arrays
                         return -1;
                     }
 
-                    if (comparer.Equals(Buffer[j], item))
+                    if (comparer.Equals(buffer[j], item))
                     {
                         return i;
                     }
@@ -708,7 +698,7 @@ namespace DataStructuresNET.Arrays
         {
             lock (((ICollection)this).SyncRoot)
             {
-                Array.Copy(new T[CurrentGapSize], 0, Buffer, GapStart, CurrentGapSize);
+                Array.Copy(new T[CurrentGapSize], 0, buffer, GapStart, CurrentGapSize);
             }
         }
 
@@ -722,13 +712,13 @@ namespace DataStructuresNET.Arrays
             {
                 for (int i = 0; i < fGapStart; i++)
                 {
-                    yield return Buffer[i];
+                    yield return buffer[i];
                 }
 
                 int end = BufferEnd;
                 for (int i = GapEnd; i < end; i++)
                 {
-                    yield return Buffer[i];
+                    yield return buffer[i];
                 }
             }
         }
@@ -736,6 +726,7 @@ namespace DataStructuresNET.Arrays
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="index"></param>
         /// <param name="array"></param>
         /// <param name="arrayIndex"></param>
         /// <param name="count"></param>
@@ -770,7 +761,7 @@ namespace DataStructuresNET.Arrays
         /// 
         /// </summary>
         /// <param name="array"></param>
-        /// <param name="startIndex"></param>
+        /// <param name="arrayIndex"></param>
         public void CopyTo(T[] array, int arrayIndex)
         {
             try
@@ -831,7 +822,7 @@ namespace DataStructuresNET.Arrays
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return (IEnumerator)GetEnumerator();
+            return GetEnumerator();
         }
 
         #endregion

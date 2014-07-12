@@ -1,28 +1,19 @@
-﻿#region Copyright © 2011, João Correia
+﻿#region Copyright © 2014, João Correia
 //
-// Copyright © 2011, João Correia
+// Copyright © 2014, João Correia
 // All rights reserved
 // http://joaope.github.com
 //
 #endregion
 
-#region Using
-#endregion
-
 namespace DataStructuresNET.Arrays
 {
+    using System;
+
     /// <summary>
     /// Queues interface.
     /// </summary>
     /// <typeparam name="T">The type of elements hold by the <see cref="IQueue{T}"/>.</typeparam>
-    /// <author>João Correia</author>
-    /// <owner>João Correia</owner>
-    /// <history>
-    /// __________________________________________________________________________
-    /// History :
-    /// 20110628 jcorreia [+] Initial version
-    /// __________________________________________________________________________
-    /// </history>
     public interface IQueue<T>
     {
         /// <summary>

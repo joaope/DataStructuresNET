@@ -1,18 +1,15 @@
-﻿#region Copyright © 2011, João Correia
+﻿#region Copyright © 2014, João Correia
 //
-// Copyright © 2011, João Correia
+// Copyright © 2014, João Correia
 // All rights reserved
 // http://joaope.github.com
 //
 #endregion
 
-#region Using
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
-#endregion
 
 namespace DataStructuresNET.Arrays
 {
@@ -20,14 +17,6 @@ namespace DataStructuresNET.Arrays
     /// Circular Buffer (Queue) implementation.
     /// </summary>
     /// <typeparam name="T">The type of elements hold by the <see cref="CircularBuffer{T}"/>.</typeparam>
-    /// <author>João Correia</author>
-    /// <owner>João Correia</owner>
-    /// <history>
-    /// __________________________________________________________________________
-    /// History :
-    /// 20110628 jcorreia [+] Initial version
-    /// __________________________________________________________________________
-    /// </history>
     public class CircularBuffer<T>
         : IQueue<T>, IArray<T>
     {
@@ -69,7 +58,7 @@ namespace DataStructuresNET.Arrays
                     if (value < Count)
                     {
                         throw new ArgumentOutOfRangeException(
-                            "Capacity",
+                            "value",
                             value,
                             string.Format("Capacity must be greater than or equal to the current buffer size, which is {0}", Count));
                     }
@@ -110,7 +99,7 @@ namespace DataStructuresNET.Arrays
                 if (index < 0 || index >= Count)
                 {
                     throw new ArgumentOutOfRangeException(
-                        "indexer",
+                        "index",
                         index,
                         string.Format(
                             "Index must be non-negative and less than the array count ({0})", 
@@ -125,7 +114,7 @@ namespace DataStructuresNET.Arrays
                 if (index < 0 || index >= Count)
                 {
                     throw new ArgumentOutOfRangeException(
-                        "indexer",
+                        "index",
                         index,
                         string.Format(
                             "Index must be non-negative and less than the array count ({0})",
@@ -233,16 +222,16 @@ namespace DataStructuresNET.Arrays
         /// <summary>
         /// Adds a range of items to the <see cref="CircularBuffer{T}"/>.
         /// </summary>
-        /// <param name="collection">Array of items to add to thequeue.</param>
-        /// <param name="sourceIndex"><paramref name="colletion"/>'s starting element index.</param>
+        /// <param name="source">Array of items to add to thequeue.</param>
+        /// <param name="sourceIndex"><paramref name="source"/>'s starting element index.</param>
         /// <param name="length">Number of items to enqueue starting on <paramref name="sourceIndex"/></param>
-        /// <exception cref="ArgumentNullException"><paramref name="collection"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        /// If <paramref name="collection"/> is lower than 0 (zero-based index)
+        /// If <paramref name="source"/> is lower than 0 (zero-based index)
         /// 
         /// -OR-
         /// 
-        /// If <paramref name="collection"/> is higher than the actual <see cref="CircularBuffer{T}"/> length.
+        /// If <paramref name="source"/> is higher than the actual <see cref="CircularBuffer{T}"/> length.
         /// </exception>
         /// <exception cref="ArgumentException">
         /// Number of elements to add, starting from <paramref name="sourceIndex"/>, exceeds 
@@ -292,7 +281,7 @@ namespace DataStructuresNET.Arrays
         {
             lock (((ICollection)this).SyncRoot)
             {
-                int bufferIndex = Head;
+                var bufferIndex = Head;
                 var comparer = EqualityComparer<T>.Default;
 
                 for (int i = 0; i < Count; i++, bufferIndex++)
@@ -306,7 +295,7 @@ namespace DataStructuresNET.Arrays
                     {
                         return true;
                     }
-                    else if ((Buffer[bufferIndex] != null) && comparer.Equals(Buffer[bufferIndex], item))
+                    if ((Buffer[bufferIndex] != null) && comparer.Equals(Buffer[bufferIndex], item))
                     {
                         return true;
                     }
@@ -477,9 +466,9 @@ namespace DataStructuresNET.Arrays
                 }
                 else if (Count > 0 && (Count * 100 / Capacity) <= 90)
                 {
-                    int newCapacity = Count;
+                    var newCapacity = Count;
 
-                    T[] newBuffer = new T[newCapacity];
+                    var newBuffer = new T[newCapacity];
                     CopyTo(newBuffer);
 
                     Buffer = newBuffer;
@@ -520,25 +509,15 @@ namespace DataStructuresNET.Arrays
             }
         }
 
-        #region IEnumerable explicit implementation
-
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return (IEnumerator)GetEnumerator();
+            return GetEnumerator();
         }
-
-        #endregion
-
-        #region IEnumerable<T> explicit implementation
 
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             return GetEnumerator();
         }
-
-        #endregion
-
-        #region ICollection explicit implementation
 
         void ICollection.CopyTo(Array array, int index)
         {
@@ -566,7 +545,5 @@ namespace DataStructuresNET.Arrays
                 return fSyncRoot;
             }
         }
-
-        #endregion
     }
 }
