@@ -212,12 +212,12 @@ namespace DataStructuresNET.Arrays
         /// <param name="capacity"></param>
         public GapBuffer(int gapSize, int capacity)
         {
-            if (gapSize <= 0)
+            if (gapSize < 0)
             {
                 throw new ArgumentOutOfRangeException("gapSize", gapSize, "GapSize must be higher than 0");
             }
 
-            if (capacity <= 0) 
+            if (capacity < 0) 
             {
                 throw new ArgumentOutOfRangeException("capacity", capacity, "Capacity must be higher than 0");
             }
