@@ -177,7 +177,7 @@ namespace DataStructuresNET.Arrays
 
         /// <summary>
         /// Initializes a new instance of <see cref="CircularBuffer{T}"/> class with
-        /// a capacity for 255 objects and which allows overwritting.
+        /// a capacity of 255 and which allows overwriting.
         /// </summary>
         public CircularBuffer()
             : this(255, true)
@@ -185,7 +185,27 @@ namespace DataStructuresNET.Arrays
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CircularBuffer{T}"/> class.
+        /// Initializes a new instance of <see cref="CircularBuffer{T}"/> class with
+        /// specified <param name="capacity"/> and which allows overwriting.
+        /// </summary>
+        /// <param name="capacity">The initial buffer's capacity.</param>
+        public CircularBuffer(int capacity)
+            : this(capacity, true)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="CircularBuffer{T}"/> class with
+        /// a capacity of 255.
+        /// </summary>
+        /// <param name="allowOverwrite"></param>
+        public CircularBuffer(bool allowOverwrite)
+            : this(255, allowOverwrite)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="CircularBuffer{T}"/> class.
         /// </summary>
         /// <param name="capacity">The initial buffer's capacity.</param>
         /// <param name="allowOverwrite">Indicates if elements overwrite is allowed.</param>

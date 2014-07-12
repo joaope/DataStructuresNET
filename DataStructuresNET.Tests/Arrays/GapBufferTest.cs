@@ -59,14 +59,14 @@ namespace DataStructuresNET.Tests.Arrays
         [ExpectedException(typeof(ArgumentOutOfRangeException), AllowDerivedTypes = false)]
         public void GapBuffer_Ctor_ExceptionGapSize()
         {
-            var buffer = new GapBuffer<bool>(-1);
+            var buffer = new GapBuffer<bool>(-1, 10);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException), AllowDerivedTypes = false)]
         public void GapBuffer_Ctor_CapacityLessThanZeroException()
         {
-            var buffer = new GapBuffer<bool>(capacity: -10);
+            var buffer = new GapBuffer<bool>(10, -10);
         }
 
         [TestMethod]
